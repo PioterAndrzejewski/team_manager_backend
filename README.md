@@ -6,7 +6,7 @@
   <a href="https://github.com/PioterAndrzejewski/team_manager_backend
   </a>
 
-<h3 align="center">Portfolio app</h3>
+<h3 align="center">Team Manager</h3>
 
   <p align="center">
     Team Manager - backend
