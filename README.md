@@ -39,28 +39,7 @@ Now you're ready to test the app in your browser on localhost:3000
 
     
  ## Structure of database
- / database
-	TeamsList
-	    team
-        team_id,
-        team_name,
-	Team
-      Project_ID,
-      Project_name,
-      Team_members
-          member
-              memberId,
-              memberName,
-              memberIsAdmin,
-              memberTasks
-     Tasks: 
-        taskId,
-        taskName,
-        taskDueDate,
-        taskFinished: false,
-          taskAssignees,
-
-
+![image](https://user-images.githubusercontent.com/109315248/214561866-87a487bf-9952-410b-b41a-508aa4db0891.png)
  ## To-do
 
     
