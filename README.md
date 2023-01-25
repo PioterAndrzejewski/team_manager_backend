@@ -39,7 +39,7 @@ Now you're ready to test the app in your browser on localhost:3000
 
     
  ## Structure of database
-![image](https://user-images.githubusercontent.com/109315248/214561866-87a487bf-9952-410b-b41a-508aa4db0891.png)
+![image](https://user-images.githubusercontent.com/109315248/214562030-72e2490c-22ca-4ae5-8f91-73416749385e.png)
  ## To-do
 
     
