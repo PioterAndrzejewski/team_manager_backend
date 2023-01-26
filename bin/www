@@ -1,18 +1,12 @@
-#!/usr/bin/env node
-
-/**
- * Module dependencies.
- */
-
 var app = require('../app');
 var debug = require('debug')('team-manager-backend:server');
 var http = require('http');
 
 /**
- * Get port from environment and store in Express.
+ * Get port from environment and stor in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '3636');
 app.set('port', port);
 
 /**
