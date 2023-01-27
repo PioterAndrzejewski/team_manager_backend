@@ -1,0 +1,61 @@
+{
+  "projectExists": true,
+  "projectId": 9309,
+  "projectName": "ddd",
+  "projectMembers": [
+    {
+      "memberId": 0,
+      "memberName": "asdasdas",
+      "memberTasks": [
+        0, 1, 2
+      ],
+      "memberIsLeader": true,
+      "memberImageURL": "http://localhost:3636/getimage/9215/face_member_0.jpg"
+    },
+    {
+      "memberId": 1,
+      "memberName": "Moniczka",
+      "memberTasks": [
+        0,
+        1
+      ],
+      "memberIsLeader": false,
+      "memberImageURL": "http://localhost:3636/getimage/9215/face_member_1.jpg"
+    }
+  ],
+  "taskList": [
+    {
+      "taskId": 0,
+      "taskName": "Finished test task",
+      "taskDescription": "This is a test task. Edit it or delete.",
+      "taskDueDate": "26.01.2023",
+      "taskFinished": true,
+      "taskFinishedDate": "22.03.2023",
+      "taskAssignees": [
+        0
+      ]
+    },
+    {
+      "taskId": 1,
+      "taskName": "Finished test task",
+      "taskDescription": "This is a test task. Edit it or delete.",
+      "taskDueDate": "26.01.2023",
+      "taskFinished": false,
+      "taskAssignees": [
+        0,
+        1
+      ]
+    },
+    {
+      "taskId": 2,
+      "taskName": "Overdue test task",
+      "taskDescription": "This is a test task. Edit it or delete.",
+      "taskDueDate": "22.01.2023",
+      "taskFinished": false,
+      "taskAssignees": [
+        0,
+        1
+      ]
+    }
+  ]
+}
