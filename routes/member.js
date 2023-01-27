@@ -25,6 +25,7 @@ router.post('/', upload.single('avatar'), async (req, res) => {
         memberId = parseInt(req.body.memberToEditId);
         const index = projectData.projectMembers.findIndex(member => member.memberId === memberId);
         projectData.projectMembers[index].memberName = req.body.memberName;
+        projectData.projectMembers[index].memberImageURL = `http://localhost:3636/getimage/${projectData.projectId}/face_member_${memberId}.${req.body.fileExtension}`;
     }
 
     await writeFile(`./data/${projectData.projectId}/img/face_member_${memberId}.${req.body.fileExtension}`, req.file.buffer)

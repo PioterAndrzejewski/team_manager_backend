@@ -19,10 +19,6 @@ router.post('/', bodyParser.json(), async (req, res) => {
     })
 
 
-    console.log(req.body.removeMemberId);
-    console.log(updatedProjectTasks);
-
-
     await writeFile(`./data/${projectData.projectId}/data.json`, JSON.stringify(projectData));
     const response = JSON.stringify({
         creationSuccess: true,
