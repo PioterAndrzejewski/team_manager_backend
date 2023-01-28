@@ -29,7 +29,6 @@ router.post('/', getFile.none(), async (req, res) => {
             taskFinishedDate: undefined,
             taskAssignees: [],
         });
-        updatedTaskList = projectData.taskList;
     }
 
     if (req.body.mode === "edit") {
@@ -38,18 +37,31 @@ router.post('/', getFile.none(), async (req, res) => {
         projectData.taskList[index].taskName = req.body.taskName;
         projectData.taskList[index].taskDescription = req.body.taskDescription;
         projectData.taskList[index].taskDueDate = req.body.taskDueDate;
-        projectData.taskList[index].taskFinished = req.body.taskFinished;
-        projectData.taskList[index].taskFinishedDate = req.body.taskFinishedDate;
-        projectData.taskList[index].taskAssignees = req.body.taskAssignees;
-        updatedTaskList = projectData.taskList;
+        projectData.taskList[index].taskFinished = req.body.taskFinished === 'true';
+        projectData.taskList[index].taskFinishedDate = req.body.taskFinishedDate[0];
+    }
+
+
+    if (req.body.mode === "setfinished") {
+        taskId = parseInt(req.body.taskToEditId);
+        const index = projectData.taskList.findIndex(task => task.taskId === taskId);
+        projectData.taskList[index].taskFinished = true;
+        projectData.taskList[index].taskFinishedDate = req.body.finishedDate;
+    }
+
+    if (req.body.mode === "setunfinished") {
+        taskId = parseInt(req.body.taskToEditId);
+        const index = projectData.taskList.findIndex(task => task.taskId === taskId);
+        projectData.taskList[index].taskFinished = false;
+        projectData.taskList[index].taskFinishedDate = undefined;
     }
 
     if (req.body.mode === "remove") {
-        updatedTaskList = projectData.taskList.filter(task => task.taskId !== parseInt(req.body.taskToRemoveId))
-
+        updatedTaskList = projectData.taskList.filter(task => task.taskId !== parseInt(req.body.taskToEditId))
+        projectData.taskList = updatedTaskList;
     }
 
-    projectData.taskList = updatedTaskList;
+
     console.log(updatedTaskList);
     console.log(projectData);
 
@@ -58,7 +70,7 @@ router.post('/', getFile.none(), async (req, res) => {
     const response = JSON.stringify({
         success: true,
         message: "",
-        updatedTaskList,
+        updatedTaskList: projectData.taskList,
     })
     res.send(response)
 });

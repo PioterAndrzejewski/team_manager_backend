@@ -28,9 +28,9 @@
       "taskId": 0,
       "taskName": "Finished test task",
       "taskDescription": "This is a test task. Edit it or delete.",
-      "taskDueDate": "26.01.2023",
+      "taskDueDate": "2023-01-28T16:49:47.741Z",
       "taskFinished": true,
-      "taskFinishedDate": "Mon Jan 21 2023 19:00:29 GMT+0100",
+      "taskFinishedDate": "2023-01-28T16:49:47.741Z",
       "taskAssignees": [
         0
       ]
@@ -39,7 +39,7 @@
       "taskId": 1,
       "taskName": "Finished test task",
       "taskDescription": "This is a test task. Edit it or delete.",
-      "taskDueDate": "Mon Jan 21 2023 19:00:29 GMT+0100",
+      "taskDueDate": "2023-01-28T16:49:47.741Z",
       "taskFinished": false,
       "taskAssignees": [
         0,
@@ -50,7 +50,7 @@
       "taskId": 2,
       "taskName": "Overdue test task",
       "taskDescription": "This is a test task. Edit it or delete.",
-      "taskDueDate": "Mon Jan 21 2023 19:00:29 GMT+0100",
+      "taskDueDate": "2023-01-28T16:49:47.741Z",
       "taskFinished": false,
       "taskAssignees": [
         0,
