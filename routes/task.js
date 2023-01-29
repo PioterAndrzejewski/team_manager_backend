@@ -106,7 +106,7 @@ router.post('/', getFile.none(), async (req, res) => {
         const taskIndex = projectData.taskList.findIndex(task => task.taskId === parseInt(req.body.taskToEditId));
         projectData.taskList[taskIndex].taskAssignees.push(req.body.memberId);
         const memberIndex = projectData.projectMembers.findIndex(member => member.memberId === parseInt(req.body.memberId));
-        projectData.projectMembers[memberIndex].memberTasks.push(req.body.taskId);
+        projectData.projectMembers[memberIndex].memberTasks.push(req.body.taskToEditId);
         response = JSON.stringify({
             success: true,
             message: "",

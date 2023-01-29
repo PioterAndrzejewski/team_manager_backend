@@ -12,15 +12,6 @@
         2
       ],
       "memberImageURL": "http://localhost:3636/getimage/9215/face_member_0.jpg"
-    },
-    {
-      "memberId": 1,
-      "memberName": "Moniczka",
-      "memberTasks": [
-        1,
-        2
-      ],
-      "memberImageURL": "http://localhost:3636/getimage/9215/face_member_1.jpg"
     }
   ],
   "taskList": [
@@ -37,13 +28,12 @@
     },
     {
       "taskId": 1,
-      "taskName": "Finished test task",
+      "taskName": "Unfinished test task",
       "taskDescription": "This is a test task. Edit it or delete.",
-      "taskDueDate": "2023-01-28T16:49:47.741Z",
+      "taskDueDate": "2024-01-28T16:49:47.741Z",
       "taskFinished": false,
       "taskAssignees": [
-        0,
-        1
+        0
       ]
     },
     {
@@ -53,8 +43,7 @@
       "taskDueDate": "2023-01-28T16:49:47.741Z",
       "taskFinished": false,
       "taskAssignees": [
-        0,
-        1
+        0
       ]
     }
   ]

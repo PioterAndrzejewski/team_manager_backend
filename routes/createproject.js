@@ -28,7 +28,6 @@ const setupNewProjectDirectory = async (req)=> {
     await mkdir(`./data/${newProjectId}`);
     await mkdir(`./data/${newProjectId}/img`);
     await copyFile('./data/template/img/face_member_0.jpg', `./data/${newProjectId}/img/face_member_0.jpg`);
-    await copyFile('./data/template/img/face_member_1.jpg', `./data/${newProjectId}/img/face_member_1.jpg`);
     await copyFile('./data/template/data.json', `./data/${newProjectId}/data.json`);
 
     const projectDatabaseTemplate = await readFile(`./data/template/data.json`);
@@ -37,7 +36,6 @@ const setupNewProjectDirectory = async (req)=> {
     newProjectDatabase.projectName = req.projectName;
     newProjectDatabase.projectMembers[0].memberName = req.leaderName;
     newProjectDatabase.projectMembers[0].memberImageURL = `http://localhost:3636/getimage/${newProjectId}/face_member_0.jpg`;
-    newProjectDatabase.projectMembers[1].memberImageURL = `http://localhost:3636/getimage/${newProjectId}/face_member_1.jpg`;
 
     const newProjectDatabaseJSON = JSON.stringify(newProjectDatabase);
     await writeFile(`./data/${newProjectId}/data.json`, newProjectDatabaseJSON, {
