@@ -18,11 +18,16 @@ router.post('/', bodyParser.json(), async (req, res) => {
         return task;
     })
 
+    projectData.taskList = updatedProjectTasks;
+
+    console.log(updatedProjectTasks);
+    console.log(updatedMembers)
 
     await writeFile(`./data/${projectData.projectId}/data.json`, JSON.stringify(projectData));
     const response = JSON.stringify({
         creationSuccess: true,
         projectMembers: updatedMembers,
+        projectTasks: updatedProjectTasks,
     })
     res.send(response);
 });

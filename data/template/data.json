@@ -7,7 +7,9 @@
       "memberId": 0,
       "memberName": "asdasdas",
       "memberTasks": [
-        0, 1, 2
+        0,
+        1,
+        2
       ],
       "memberIsLeader": true,
       "memberImageURL": "http://localhost:3636/getimage/9215/face_member_0.jpg"
@@ -16,8 +18,8 @@
       "memberId": 1,
       "memberName": "Moniczka",
       "memberTasks": [
-        0,
-        1
+        1,
+        2
       ],
       "memberIsLeader": false,
       "memberImageURL": "http://localhost:3636/getimage/9215/face_member_1.jpg"

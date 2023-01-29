@@ -11,7 +11,11 @@ router.post('/', upload.single('avatar'), async (req, res) => {
     let memberId;
     if (req.body.mode === "create") {
         const teamMembersCount = projectData.projectMembers.length;
-        memberId = projectData.projectMembers[teamMembersCount - 1].memberId + 1;
+        if (teamMembersCount === 0) {
+            memberId = 0;
+        } else {
+            memberId = projectData.projectMembers[teamMembersCount - 1].memberId + 1;
+        }
         projectData.projectMembers.push({
             memberId,
             memberName: req.body.memberName,
