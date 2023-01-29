@@ -11,7 +11,7 @@ const getImageRouter = require('./routes/getimage');
 const memberRouter = require('./routes/member');
 const removeMemberRouter = require('./routes/removemember');
 const taskRouter = require('./routes/task');
-const removeProjectRouter = require('./routes/removeproject');
+const editProjectRouter = require('./routes/editproject');
 
 const app = express();
 
@@ -28,6 +28,6 @@ app.use('/getimage', getImageRouter);
 app.use('/removemember', removeMemberRouter);
 app.use('/task', taskRouter);
 app.use('/member', memberRouter);
-app.use('/removeproject', removeProjectRouter);
+app.use('/editproject', editProjectRouter);
 
 module.exports = app;

@@ -8,6 +8,8 @@ const getFile = multer();
 
 router.post('/', getFile.none(), async (req, res) => {
     console.log(req.body)
+
+
     const projectDataJSON = await readFile(`./data/${req.body.projectId}/data.json`);
     const projectData = JSON.parse(projectDataJSON);
     console.log(req.body)
@@ -70,9 +72,9 @@ router.post('/', getFile.none(), async (req, res) => {
 
     if (req.body.mode === "setunfinished") {
         taskId = parseInt(req.body.taskToEditId);
-        const index = projectData.taskList.findIndex(task => task.taskId === taskId);
-        projectData.taskList[index].taskFinished = false;
-        projectData.taskList[index].taskFinishedDate = undefined;
+        const taskIndex = projectData.taskList.findIndex(task => task.taskId === taskId);
+        projectData.taskList[taskIndex].taskFinished = false;
+        projectData.taskList[taskIndex].taskFinishedDate = undefined;
         response = JSON.stringify({
             success: true,
             message: "",
@@ -83,17 +85,28 @@ router.post('/', getFile.none(), async (req, res) => {
     if (req.body.mode === "remove") {
         updatedTaskList = projectData.taskList.filter(task => task.taskId !== parseInt(req.body.taskToEditId));
         projectData.taskList = updatedTaskList;
+        const updatedMembers = projectData.projectMembers.map(member => {
+            const updatedTasks = member.memberTasks.filter(taskId => taskId != parseInt(req.body.taskToEditId));
+            const updatedMember = {...member,
+            memberTasks: updatedTasks};
+            return updatedMember;
+        })
         console.log(updatedTaskList);
+        console.log(updatedMembers);
+        projectData.projectMembers = updatedMembers;
         response = JSON.stringify({
             success: true,
             message: "",
             updatedTaskList: projectData.taskList,
+            projectMembers: projectData.projectMembers,
         })
     }
 
     if (req.body.mode === "addassignee") {
-        projectData.taskList[req.body.taskId].taskAssignees.push(req.body.memberId);
-        projectData.projectMembers[req.body.memberId].memberTasks.push(req.body.taskId);
+        const taskIndex = projectData.taskList.findIndex(task => task.taskId === parseInt(req.body.taskToEditId));
+        projectData.taskList[taskIndex].taskAssignees.push(req.body.memberId);
+        const memberIndex = projectData.projectMembers.findIndex(member => member.memberId === parseInt(req.body.memberId));
+        projectData.projectMembers[memberIndex].memberTasks.push(req.body.taskId);
         response = JSON.stringify({
             success: true,
             message: "",
@@ -104,15 +117,13 @@ router.post('/', getFile.none(), async (req, res) => {
 
 
     if (req.body.mode === "removeassignee") {
-        updatedTaskAssignees = projectData.taskList[req.body.taskToEditId].taskAssignees.filter(assignee => assignee !== parseInt(req.body.assigneeToRemove));
-        projectData.taskList[req.body.taskToEditId].taskAssignees = updatedTaskAssignees;
+        const taskIndex = projectData.taskList.findIndex(task => task.taskId === parseInt(req.body.taskToEditId));
+        updatedTaskAssignees = projectData.taskList[taskIndex].taskAssignees.filter(assignee => assignee !== parseInt(req.body.assigneeToRemove));
+        projectData.taskList[taskIndex].taskAssignees = updatedTaskAssignees;
 
-        updatedMemberTasks = projectData.projectMembers[req.body.assigneeToRemove].memberTasks.filter(task => task !== parseInt(req.body.taskToEditId));
-        projectData.projectMembers[req.body.assigneeToRemove].memberTasks = updatedMemberTasks;
-
-        console.log(projectData.projectMembers);
-        console.log(projectData.taskList);
-
+        const memberIndex = projectData.projectMembers.findIndex(member => member.memberId === parseInt(req.body.assigneeToRemove));
+        updatedMemberTasks = projectData.projectMembers[memberIndex].memberTasks.filter(task => task !== parseInt(req.body.taskToEditId));
+        projectData.projectMembers[memberIndex].memberTasks = updatedMemberTasks;
 
         response = JSON.stringify({
             success: true,
@@ -121,6 +132,7 @@ router.post('/', getFile.none(), async (req, res) => {
             projectMembers: projectData.projectMembers,
         })
     }
+
 
 
     await writeFile(`./data/${projectData.projectId}/data.json`, JSON.stringify(projectData));

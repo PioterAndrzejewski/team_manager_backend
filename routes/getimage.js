@@ -5,7 +5,6 @@ const {join} = require("path");
 
 
 router.get('/:id/:fileName', async (req, res) => {
-    console.log('wyowłuję roota')
     const requestedId = req.params.id;
     const requestedFileName = req.params.fileName;
 
