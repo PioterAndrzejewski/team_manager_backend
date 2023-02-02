@@ -3,32 +3,26 @@ const router = express.Router();
 const {readFile, writeFile,  mkdir, copyFile} = require('fs').promises;
 const {join} = require("path");
 
-const PROJECTS_LIST_FILE = './data/projectsList.json'
+const {readProjectData, writeProjectData, findMembersIndex} = require('../utils/projectData')
+const {readProjectsList, checkProjectId} = require('../utils/projectsList')
 
-const checkProjectId = async (requestedId) => {
-    const projectsListDataFromFile = await readFile(PROJECTS_LIST_FILE, 'utf8');
-    const projectsList = JSON.parse(projectsListDataFromFile);
 
-    if (projectsList.some(project => project.projectId === requestedId)) {
-        return {projectDoesntExist: false, message: "Project exists"};
-    }
-    return {projectDoesntExist: true, message: "There is no project under such ID"};
+const generateProjectDataPath = (requestedId) => {
+    return `/${requestedId}/data.json`
 }
 
 router.get('/:id', async (req, res) => {
     const requestedId = parseInt(req.params.id);
-    let requestValidation = await checkProjectId(requestedId);
-    if (requestValidation.projectDoesntExist) {
-        const response = JSON.stringify({
-            projectExists: requestValidation.projectExists,
-            message: requestValidation.message,
-        });
+    const projectsList = await readProjectsList();
+    let projectIdValidation = await checkProjectId(projectsList, requestedId);
+    if (projectIdValidation.projectDoesntExist) {
+        const response = JSON.stringify(projectIdValidation);
         res.end(response)
         return;
     }
 
-
-    res.sendFile(`/${requestedId}/data.json`, {
+    const projectDataPath = generateProjectDataPath(requestedId);
+    res.sendFile(projectDataPath, {
         root: join(__dirname, '../data')
     })
 });

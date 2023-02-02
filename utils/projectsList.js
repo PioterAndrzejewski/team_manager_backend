@@ -12,5 +12,12 @@ const writeProjectsList = async (newProjectsList) => {
     await writeFile(PROJECTS_LIST_FILE, newProjectsListJSON);
 }
 
+const checkProjectId = async (projectsList, requestedId) => {
+    if (projectsList.some(project => project.projectId === requestedId)) {
+        return {projectDoesntExist: false, message: "Project exists"};
+    }
+    return {projectDoesntExist: true, message: "There is no project under such ID"};
+}
 
-module.exports = {readProjectsList, writeProjectsList}
+
+module.exports = {readProjectsList, writeProjectsList, checkProjectId}

@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const {readFile, writeFile} = require('fs').promises;
-const {join} = require("path");
 const bodyParser = require('body-parser')
 
 router.post('/', bodyParser.json(), async (req, res) => {

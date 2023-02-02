@@ -10,5 +10,11 @@ const writeProjectData =async (projectId, projectData) => {
     await writeFile(`./data/${projectData.projectId}/data.json`, JSON.stringify(projectData));
 }
 
+const findMembersIndex = (projectData, memberId) => {
+    console.log({ memberId})
+    console.log(projectData.projectMembers)
+    return projectData.projectMembers.findIndex(member => member.memberId === parseInt(memberId))
+}
 
-module.exports = {readProjectData, writeProjectData}
+
+module.exports = {readProjectData, writeProjectData, findMembersIndex}

@@ -1,54 +1,116 @@
 const express = require('express');
 const router = express.Router();
-const {readFile, writeFile} = require('fs').promises;
-const {join} = require("path");
+const { writeFile} = require('fs').promises;
 const multer  = require('multer');
 const upload = multer();
 
-router.post('/', upload.single('avatar'), async (req, res) => {
-    const projectDataJSON = await readFile(`./data/${req.body.projectId}/data.json`);
-    const projectData = JSON.parse(projectDataJSON);
-    let memberId;
-    let imageToSavePath;
-    if (req.body.mode === "create") {
-        const teamMembersCount = projectData.projectMembers.length;
-        if (teamMembersCount === 0) {
-            memberId = 0;
-        } else {
-            memberId = projectData.projectMembers[teamMembersCount - 1].memberId + 1;
-        }
-        imageToSavePath = `./data/${projectData.projectId}/img/face_member_${memberId}.${req.body.fileExtension}`;
-        projectData.projectMembers.push({
-            memberId,
-            memberName: req.body.memberName,
-            memberTasks: [],
-            memberIsLeader: false,
-            memberImageURL: `http://localhost:3636/getimage/${projectData.projectId}/face_member_${memberId}.${req.body.fileExtension}`,
-        });
-    }
+const {readProjectData, writeProjectData, findMembersIndex} = require('../utils/projectData')
 
-    if (req.body.mode === "edit") {
-        memberId = parseInt(req.body.memberToEditId);
-        const index = projectData.projectMembers.findIndex(member => member.memberId === memberId);
-        let avatarId = projectData.projectMembers[index].memberImage_ID;
-        console.log(avatarId);
-        if (avatarId === undefined) {
-            avatarId = 0;
-        } else {
-            avatarId++;
-        }
-        projectData.projectMembers[index].memberName = req.body.memberName;
-        imageToSavePath = `./data/${projectData.projectId}/img/face_member_${memberId}_${avatarId}.${req.body.fileExtension}`;
-        projectData.projectMembers[index].memberImageURL = `http://localhost:3636/getimage/${projectData.projectId}/face_member_${memberId}_${avatarId}.${req.body.fileExtension}`;
+const generateNewMemberId = (projectData)=>{
+    const teamMembersCount = projectData.projectMembers.length;
+    if (teamMembersCount === 0) {
+        return 0;
+    } else {
+        return projectData.projectMembers[teamMembersCount - 1].memberId + 1;
     }
-    await writeFile(imageToSavePath, req.file.buffer)
-    await writeFile(`./data/${projectData.projectId}/data.json`, JSON.stringify(projectData));
-
+};
+const generatePathToSaveNewMemberImage = (projectData, newMemberId, fileExtension)=> {
+    return `./data/${projectData.projectId}/img/face_member_${newMemberId}.${fileExtension}`
+};
+const generatePathToUpdateMemberImage = (projectId, memberToEditId, newAvatarId, fileExtension) => {
+    return `./data/${projectId}/img/face_member_${memberToEditId}_${newAvatarId}.${fileExtension}`
+};
+const generateNewMemberImageURL = (projectId, newMemberId, fileExtension) => {
+    return `http://localhost:3636/getimage/${projectId}/face_member_${newMemberId}.${fileExtension}`
+};
+const generateUpdatedMemberImageURL = (projectId, memberToEditId, newAvatarId, fileExtension) => {
+    return `http://localhost:3636/getimage/${projectId}/face_member_${memberToEditId}_${newAvatarId}.${fileExtension}`;
+}
+const generateAvatarId = (projectData, memberToEditIndex) => {
+    let prevAvatarId;
+    prevAvatarId = projectData.projectMembers[memberToEditIndex].memberImage_ID;
+    if (prevAvatarId === undefined) {
+        return 0;
+    }
+    return ++prevAvatarId;
+};
+const pushNewMemberToProjectData = (projectData, newMemberId,newMemberName, newMemberImageURL) => {
+    const updatedProjectData = {...projectData}
+    updatedProjectData.projectMembers.push({
+        memberId: newMemberId,
+        memberName: newMemberName,
+        memberTasks: [],
+        memberImageURL: newMemberImageURL,
+    });
+    return updatedProjectData;
+};
+const updateProjectMember = (projectData, memberToEditIndex, newMemberName, updatedMemberImageURL, newAvatarId) => {
+    const updatedProjectData = {...projectData}
+    updatedProjectData.projectMembers[memberToEditIndex].memberName = newMemberName;
+    updatedProjectData.projectMembers[memberToEditIndex].memberImageURL = updatedMemberImageURL;
+    updatedProjectData.projectMembers[memberToEditIndex].memberImage_ID = newAvatarId;
+    return updatedProjectData;
+};
+const createResponseOK = (updatedMembers) => {
     const response = JSON.stringify({
         creationSuccess: true,
-        projectMembers: projectData.projectMembers,
+        projectMembers: updatedMembers,
     })
-    res.send(response)
+    return response;
+};
+const createResponseNotOK = (errorMessage) => {
+    const response = JSON.stringify({
+        creationSuccess: false,
+        message: "Something went wrong. Please try again later.",
+    })
+    return response;
+};
+
+
+router.post('/', upload.single('avatar'), async (req, res) => {
+    const {mode, projectId, fileExtension, memberName, memberToEditId} = req.body;
+
+
+    if (mode === "create") {
+        try {
+            const projectData = await readProjectData(projectId);
+            const newMemberId = generateNewMemberId(projectData);
+            const pathToSaveImage = generatePathToSaveNewMemberImage(projectData, newMemberId, fileExtension);
+            await writeFile(pathToSaveImage, req.file.buffer);
+            const newMemberImageURL = generateNewMemberImageURL(projectId, newMemberId, fileExtension);
+            const updatedProjectData = pushNewMemberToProjectData(projectData, newMemberId, memberName, newMemberImageURL);
+            await writeProjectData(projectId, updatedProjectData);
+            const response = createResponseOK(updatedProjectData.projectMembers);
+            res.send(response)
+        } catch (e) {
+            const response = createResponseNotOK();
+            console.log(e);
+            res.send(response)
+        }
+    }
+    if (mode === "edit") {
+
+        try {
+            const projectData = await readProjectData(projectId);
+            const memberToEditIndex = findMembersIndex(projectData, memberToEditId);
+            const newAvatarId = generateAvatarId(projectData, memberToEditIndex);
+            const updatedMemberImageURL = generateUpdatedMemberImageURL(projectId, memberToEditId, newAvatarId, fileExtension);
+            const updatedProjectData = updateProjectMember(projectData, memberToEditIndex, memberName, updatedMemberImageURL, newAvatarId);
+            await writeProjectData(projectId, updatedProjectData);
+            const pathToUpdateMemberImage = generatePathToUpdateMemberImage(projectId, memberToEditIndex, newAvatarId, fileExtension);
+            await writeFile(pathToUpdateMemberImage, req.file.buffer)
+            const response = createResponseOK(updatedProjectData.projectMembers);
+            res.send(response)
+        } catch (e) {
+            const response = createResponseNotOK(e.message);
+            res.send(response)
+        }
+
+    }
+    if (mode !== "edit" && mode !== "create") {
+        const response = createResponseNotOK();
+        res.send(response)
+    }
 });
 
 

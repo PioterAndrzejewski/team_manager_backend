@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {readFile, writeFile,  mkdir, copyFile} = require('fs').promises;
-const {readProjectsList, writeProjectsList} = require('../utils/readProjectsList')
+const {readProjectsList, writeProjectsList} = require('../utils/projectsList')
 
 const checkIfNewProjectDataIsValid = (req) => {
   if (req.body.projectName.length < 3 ) {
@@ -71,4 +71,3 @@ router.post('/', async (req, res) => {
 });
 
 module.exports = router;
-
