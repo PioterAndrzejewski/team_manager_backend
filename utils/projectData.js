@@ -14,5 +14,10 @@ const findMembersIndex = (projectData, memberId) => {
     return projectData.projectMembers.findIndex(member => member.memberId === parseInt(memberId))
 }
 
+const findTaskIndex = (taskList, taskId) => {
+    return taskList.findIndex(task => task.taskId === parseInt(taskId));
+}
 
-module.exports = {readProjectData, writeProjectData, findMembersIndex}
+
+
+module.exports = {readProjectData, writeProjectData, findMembersIndex, findTaskIndex}
