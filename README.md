@@ -72,7 +72,7 @@ After receiving a request for data from an existing project, the application:
  
   ### Manage a team
  
-![image](https://user-images.githubusercontent.com/109315248/216421973-92926be9-b336-4f91-bd4e-884d14723e78.png)
+![image](https://user-images.githubusercontent.com/109315248/216422900-dd04a997-99af-4e07-9eaa-6b84972164fe.png)
 
 Upon receiving a request from the application, the front-end processes the following requests:
 - editing an existing member,
