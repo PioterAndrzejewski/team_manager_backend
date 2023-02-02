@@ -3,8 +3,10 @@
 <!-- PROJECT LOGO -->
 <p align="center">
 
-<img href="https://user-images.githubusercontent.com/109315248/216438920-7e76d538-c4e5-44d9-95a3-ca67f4ee730f.png" alt="Team Manager logo"> 
+<img src="https://user-images.githubusercontent.com/109315248/216438997-36ea03a5-6de8-467e-af10-c6a0ffe0f402.png" alt="Team Manager logo"> 
 
+  
+  
 </p>
 <br />
 <h3 align="center">Team Manager</h3>
