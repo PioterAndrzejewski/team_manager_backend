@@ -7,12 +7,10 @@ const readProjectData =async (projectId) => {
 }
 
 const writeProjectData =async (projectId, projectData) => {
-    await writeFile(`./data/${projectData.projectId}/data.json`, JSON.stringify(projectData));
+    await writeFile(`./data/${projectId}/data.json`, JSON.stringify(projectData));
 }
 
 const findMembersIndex = (projectData, memberId) => {
-    console.log({ memberId})
-    console.log(projectData.projectMembers)
     return projectData.projectMembers.findIndex(member => member.memberId === parseInt(memberId))
 }
 

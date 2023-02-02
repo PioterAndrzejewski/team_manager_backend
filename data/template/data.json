@@ -18,7 +18,7 @@
     {
       "taskId": 0,
       "taskName": "Welcome to project manager",
-      "taskDescription": "This is a test task that you probably see in the timeline. Here you can see list of unfinished tasks - go to 'Manage Tasks' section to perform more actions." ,
+      "taskDescription": "This is a test task" ,
       "taskDueDate": "2023-01-28T16:49:47.741Z",
       "taskFinished": true,
       "taskFinishedDate": "2023-01-28T16:49:47.741Z",
@@ -39,7 +39,7 @@
     {
       "taskId": 2,
       "taskName": "Overdue test task",
-      "taskDescription": "This is a test task. Edit it or delete.",
+      "taskDescription": "This is a test task that you probably see in the timeline. Here you can see list of unfinished tasks - go to 'Manage Tasks' section to perform more actions.",
       "taskDueDate": "2023-01-28T16:49:47.741Z",
       "taskFinished": false,
       "taskAssignees": [

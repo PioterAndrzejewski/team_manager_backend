@@ -1,34 +1,46 @@
 const express = require('express');
 const router = express.Router();
 const {readFile, writeFile} = require('fs').promises;
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 
-router.post('/', bodyParser.json(), async (req, res) => {
-    console.log(req.body)
-    const projectDataJSON = await readFile(`./data/${req.body.projectId}/data.json`);
-    const projectData = JSON.parse(projectDataJSON);
-    const teamMembers = projectData.projectMembers;
-    const updatedMembers = teamMembers.filter(member => member.memberId !== parseInt(req.body.removeMemberId));
+const {readProjectData, writeProjectData, findMembersIndex} = require('../utils/projectData')
 
-    projectData.projectMembers = updatedMembers;
-    const projectTasks = projectData.taskList;
+const removeMember = (projectMembers, removeMemberId) => {
+    return projectMembers.filter(member => member.memberId !== parseInt(removeMemberId));
+}
+const removeMemberFromTasks = (projectTasks, removeMemberId) => {
+    console.log(projectTasks);
     const updatedProjectTasks = projectTasks.map(task => {
-        task.taskAssignees = task.taskAssignees.filter(assignee => assignee !== parseInt(req.body.removeMemberId));
+        task.taskAssignees = task.taskAssignees.filter(assignee => assignee !== parseInt(removeMemberId));
         return task;
     })
+    return updatedProjectTasks;
+}
+const updateProjectData = (projectData, updatedMembers, updatedTasks) => {
+    const updatedProjectData = {...projectData};
+    updatedProjectData.projectMembers = updatedMembers;
+    updatedProjectData.taskList = updatedTasks;
+    return updatedProjectData;
+}
 
-    projectData.taskList = updatedProjectTasks;
 
-    console.log(updatedProjectTasks);
-    console.log(updatedMembers)
+router.post('/', bodyParser.json(), async (req, res) => {
+    const {projectId, removeMemberId} = req.body;
+    const projectData = await readProjectData(projectId);
+    const {projectMembers, taskList} = projectData;
+    const updatedMembers = removeMember(projectMembers, removeMemberId);
+    const updatedTasks = removeMemberFromTasks(taskList, removeMemberId)
+    const updatedProjectData = updateProjectData(projectData, updatedMembers, updatedTasks)
+    await writeProjectData(projectId,updatedProjectData);
 
-    await writeFile(`./data/${projectData.projectId}/data.json`, JSON.stringify(projectData));
     const response = JSON.stringify({
         creationSuccess: true,
         projectMembers: updatedMembers,
-        projectTasks: updatedProjectTasks,
+        projectTasks: updatedTasks,
     })
     res.send(response);
 });
 
+
 module.exports = router;
+
