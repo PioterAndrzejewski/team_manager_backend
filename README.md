@@ -123,5 +123,3 @@ The main development opportunities are:
 - connecting the project to the database (mongoDB/ MySQL),
 - implementation of authentication,
 
-
-![logo](https://user-images.githubusercontent.com/109315248/216438997-36ea03a5-6de8-467e-af10-c6a0ffe0f402.png)
