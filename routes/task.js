@@ -48,7 +48,6 @@ router.post('/', getFile.none(), async (req, res) => {
         projectData.taskList[index].taskName = req.body.taskName;
         projectData.taskList[index].taskDescription = req.body.taskDescription;
         projectData.taskList[index].taskDueDate = req.body.taskDueDate;
-        projectData.taskList[index].taskFinished = req.body.taskFinished === 'true';
         projectData.taskList[index].taskFinishedDate = req.body.taskFinishedDate[0];
         response = JSON.stringify({
             success: true,

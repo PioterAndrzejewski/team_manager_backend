@@ -1,29 +1,45 @@
 const express = require('express');
 const router = express.Router();
 const {readFile, writeFile,  mkdir, copyFile} = require('fs').promises;
+const {readProjectsList, writeProjectsList} = require('../utils/readProjectsList')
 
-const PROJECTS_LIST_FILE = './data/projectsList.json'
-
-const checkIfNewProjectDataIsValid = (req, res) => {
+const checkIfNewProjectDataIsValid = (req) => {
   if (req.body.projectName.length < 3 ) {
-    return {valid: false, message: "Project name too short"};
+    return {isOk: false, message: "Project name too short"};
   }
   if (req.body.leaderName.length < 3) {
-    return {valid: false, message: "Project leader name too short"};
+    return {isOk: false, message: "Project leader name too short"};
   }
 
-  return {valid: true, message: ""};
+  return {isOk: true, message: ""};
 }
-const setupNewProjectDirectory = async (req)=> {
-    const projectsListDataFromFile = await readFile(PROJECTS_LIST_FILE, 'utf8');
-    const projectsList = JSON.parse(projectsListDataFromFile);
+const sendResponseOK = (req, res, newProjectId) => {
+    const response = JSON.stringify({
+        creationSuccess: true,
+        projectId: newProjectId,
+        projectName: req.body.projectName,
+    })
+    res.end(response)
+}
+const sendResponseNotOk = (req, res, message) => {
+    const response = JSON.stringify({
+        creationSuccess: false,
+        redirect: "/createProject",
+        message: message,
+        projectId: null,
+    });
+    res.end(response)
+}
+const pushNewProjectToList = async (projectName) => {
+    const projectsList = await readProjectsList();
     const lastProjectId = projectsList[projectsList.length-1].projectId;
     const newProjectId = lastProjectId + 1;
-
     projectsList.push({
-        projectId: newProjectId, projectName: req.projectName});
-    const newProjectsListJSON = JSON.stringify(projectsList);
-    await writeFile(PROJECTS_LIST_FILE, newProjectsListJSON);
+        projectId: newProjectId, projectName});
+    writeProjectsList(projectsList)
+    return newProjectId;
+}
+const setupNewProjectDirectory = async (req, newProjectId)=> {
 
     await mkdir(`./data/${newProjectId}`);
     await mkdir(`./data/${newProjectId}/img`);
@@ -41,32 +57,18 @@ const setupNewProjectDirectory = async (req)=> {
     await writeFile(`./data/${newProjectId}/data.json`, newProjectDatabaseJSON, {
         recursive: true,
     });
-
-    return newProjectId;
 }
 
 router.post('/', async (req, res) => {
-    let reqIsValid =  checkIfNewProjectDataIsValid(req, res);
-    if (!reqIsValid.valid) {
-      const response = JSON.stringify({
-        creationSuccess: false,
-        redirect: "/createProject",
-        message: reqIsValid.message,
-        projectId: null,
-      });
-      res.end(response)
-      return;
+    const validationResult =  checkIfNewProjectDataIsValid(req, res);
+    if (!validationResult.isOk) {
+        sendResponseNotOk(req, res, validationResult.message)
+        return;
     }
-
-    const newProjectId = await setupNewProjectDirectory(req.body);
-
-    const response = JSON.stringify({
-      creationSuccess: true,
-      projectId: newProjectId,
-      projectName: req.body.projectName,
-    })
-  res.end(response)
+    const newProjectId = await pushNewProjectToList(req.body.projectName);
+    await setupNewProjectDirectory(req.body, newProjectId);
+    sendResponseOK(req, res, newProjectId);
 });
 
-
 module.exports = router;
+

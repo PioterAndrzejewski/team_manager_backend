@@ -1,47 +1,48 @@
 const express = require('express');
 const router = express.Router();
-const {readFile, writeFile,  mkdir, copyFile, rm} = require('fs').promises;
-const {join, dirname, basename, extname, normalize, resolve} = require('path');
+const {rm} = require('fs').promises;
+const {dirname} = require('path');
 const multer  = require('multer');
 const getFile = multer();
 
 const safeJoin = require('../utils/safeJoin')
+const {readProjectsList, writeProjectsList} = require('../utils/readProjectsList')
+const {readProjectData, writeProjectData} = require('../utils/readProjectData')
 
-const PROJECTS_LIST_FILE = './data/projectsList.json'
+const removeProject = (projectsList, projectId) => {
+    updatedProjectsList = projectsList.filter(project => project.projectId !== parseInt(projectId));
+    const projectPath = safeJoin(dirname(__dirname), `./data/${projectId}/`);
+    rm(projectPath, { recursive: true, force: true });
+}
+const updateProjectsList = (projectsList, projectId, newProjectName) => {
+    projectIndex = projectsList.findIndex(project => project.projectId === projectId);
+    updatedProjectsList = projectsList.map(project => {
+        if (project.projectId === projectId) {
+            project.projectName = newProjectName;
+        }
+        return project;
+    })
+    return updatedProjectsList;
+}
 
 
 router.post('/', getFile.none(), async (req, res) => {
-    console.log(req.body)
-
-    const projectsListDataFromFile = await readFile(PROJECTS_LIST_FILE, 'utf8');
-    const projectsList = JSON.parse(projectsListDataFromFile);
     let updatedProjectsList;
     let response;
+    const projectsList = await readProjectsList();
 
     if(req.body.mode === "remove") {
-        updatedProjectsList = projectsList.filter(project => project.projectId !== parseInt(req.body.projectId));
-        const projectPath = safeJoin(dirname(__dirname), `./data/${req.body.projectId}/`);
-        rm(projectPath, { recursive: true, force: true });
+        updatedProjectsList = removeProject(projectsList,req.body.projectId, req.body.newProjectName);
         response = JSON.stringify({
             success: true,
             action: "remove",
         })
     }
-
     if(req.body.mode === "edit") {
-        projectIndex = projectsList.findIndex(project => project.projectId === req.body.projectId);
-        updatedProjectsList = projectsList.map(project => {
-            if (project.projectId === req.body.projectId) {
-                project.projectName = req.body.newProjectName;
-            }
-            return project;
-        })
-
-        const projectDataJSON = await readFile(`./data/${req.body.projectId}/data.json`);
-        const projectData = JSON.parse(projectDataJSON);
+        updatedProjectsList = updateProjectsList(projectsList, req.body.projectId, req.body.projectName);
+        const projectData = await readProjectData(req.body.projectId);
         projectData.projectName = req.body.newProjectName;
-        await writeFile(`./data/${projectData.projectId}/data.json`, JSON.stringify(projectData));
-
+        await writeProjectData(req.body.projectId, projectData);
         response = JSON.stringify({
             success: true,
             action: "edit",
@@ -49,9 +50,12 @@ router.post('/', getFile.none(), async (req, res) => {
         })
     }
 
-    const newProjectsListJSON = JSON.stringify(updatedProjectsList);
-    await writeFile(PROJECTS_LIST_FILE, newProjectsListJSON);
-
+    await writeProjectsList(updatedProjectsList);
     res.end(response)
 });
 module.exports = router;
+
+
+
+
+
