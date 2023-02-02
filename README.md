@@ -8,14 +8,10 @@
   
   
 </p>
-<br />
 <h3 align="center">Team Manager</h3>
 
   <p align="center">
-  
     Team Manager - backend
-    <br />
-    <br />
     <br />
     <a href="https://pioterandrzejewski.github.io/Portfolio-app/">View Demo</a>
   </p>
