@@ -13,7 +13,6 @@
   <p align="center">
     Team Manager - backend
     <br />
-    <a href="https://pioterandrzejewski.github.io/Portfolio-app/">View Demo</a>
   </p>
 </div>
 
@@ -51,6 +50,8 @@ See Front-end repo <a href="https://github.com/PioterAndrzejewski/team_manager_f
  ## Structure of database
  
 ![image](https://user-images.githubusercontent.com/109315248/216416614-aa463a3d-b399-44ab-9923-27c96894ddc1.png)
+
+For simplicity - files with a list of projects and data files of individual projects are saved in the "data" folder in the .json file
 
  ## Features
  
