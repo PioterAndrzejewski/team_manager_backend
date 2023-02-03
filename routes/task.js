@@ -40,7 +40,7 @@ const updateProjectDataWithNewTaskList = (projectData, updatedTaskList) => {
 }
 const updateProjectDataWithNewProjectMembers = (projectData, updatedProjectMembers) => {
     const updatedProjectData = {...projectData};
-    updatedProjectData.projectMembe = updatedProjectMembers;
+    updatedProjectData.projectMembers = updatedProjectMembers;
     return updatedProjectData;
 }
 const updateTask = (taskList, taskToEditIndex, newTaskName, newTaskDescription, newTaskDueDate, newTaskFinished, newTaskFinishedDate) => {
@@ -48,10 +48,11 @@ const updateTask = (taskList, taskToEditIndex, newTaskName, newTaskDescription, 
     updatedTaskList[taskToEditIndex].taskName = newTaskName;
     updatedTaskList[taskToEditIndex].taskDescription = newTaskDescription;
     updatedTaskList[taskToEditIndex].taskDueDate = newTaskDueDate;
-    if (newTaskFinished) {
-        updatedTaskList[taskToEditIndex].taskFinished = newTaskFinished;
+    if (newTaskFinished === "true") {
+        updatedTaskList[taskToEditIndex].taskFinished = true;
         updatedTaskList[taskToEditIndex].taskFinishedDate = newTaskFinishedDate;
     }
+    console.log(updatedTaskList[taskToEditIndex]);
     return updatedTaskList;
 }
 const setTaskFinished = (taskList, taskToEditIndex, taskFinishedDate) => {
