@@ -1,20 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const {readFile, writeFile} = require('fs').promises;
 const bodyParser = require('body-parser');
 
-const {readProjectData, writeProjectData, findMembersIndex} = require('../utils/projectData')
+const {readProjectData, writeProjectData} = require('../utils/projectData')
 
 const removeMember = (projectMembers, removeMemberId) => {
     return projectMembers.filter(member => member.memberId !== parseInt(removeMemberId));
 }
 const removeMemberFromTasks = (projectTasks, removeMemberId) => {
     console.log(projectTasks);
-    const updatedProjectTasks = projectTasks.map(task => {
+    return projectTasks.map(task => {
         task.taskAssignees = task.taskAssignees.filter(assignee => assignee !== parseInt(removeMemberId));
         return task;
-    })
-    return updatedProjectTasks;
+    });
 }
 const updateProjectData = (projectData, updatedMembers, updatedTasks) => {
     const updatedProjectData = {...projectData};

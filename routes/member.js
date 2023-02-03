@@ -52,18 +52,16 @@ const updateProjectMember = (projectData, memberToEditIndex, newMemberName, upda
     return updatedProjectData;
 };
 const createResponseOK = (updatedMembers) => {
-    const response = JSON.stringify({
+    return JSON.stringify({
         creationSuccess: true,
         projectMembers: updatedMembers,
     })
-    return response;
 };
-const createResponseNotOK = (errorMessage) => {
-    const response = JSON.stringify({
+const createResponseNotOK = () => {
+    return JSON.stringify({
         creationSuccess: false,
         message: "Something went wrong. Please try again later.",
     })
-    return response;
 };
 
 

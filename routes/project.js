@@ -1,11 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const {readFile, writeFile,  mkdir, copyFile} = require('fs').promises;
 const {join} = require("path");
 
-const {readProjectData, writeProjectData, findMembersIndex} = require('../utils/projectData')
 const {readProjectsList, checkProjectId} = require('../utils/projectsList')
-
 
 const generateProjectDataPath = (requestedId) => {
     return `/${requestedId}/data.json`

@@ -2,8 +2,7 @@ const {readFile, writeFile} = require('fs').promises;
 
 const readProjectData =async (projectId) => {
     const projectDataJSON = await readFile(`./data/${projectId}/data.json`);
-    const projectData = JSON.parse(projectDataJSON);
-    return projectData;
+    return JSON.parse(projectDataJSON);
 }
 
 const writeProjectData =async (projectId, projectData) => {

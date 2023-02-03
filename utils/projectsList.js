@@ -1,10 +1,9 @@
-const {readFile, writeFile,  mkdir, copyFile} = require('fs').promises;
+const {readFile, writeFile} = require('fs').promises;
 const PROJECTS_LIST_FILE = './data/projectsList.json'
 
 const readProjectsList =async () => {
     const projectsListDataFromFile = await readFile(PROJECTS_LIST_FILE, 'utf8');
-    const projectsList = JSON.parse(projectsListDataFromFile);
-    return projectsList;
+    return JSON.parse(projectsListDataFromFile);
 }
 
 const writeProjectsList = async (newProjectsList) => {

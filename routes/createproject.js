@@ -36,7 +36,7 @@ const pushNewProjectToList = async (projectName) => {
     const newProjectId = lastProjectId + 1;
     projectsList.push({
         projectId: newProjectId, projectName});
-    writeProjectsList(projectsList)
+    await writeProjectsList(projectsList)
     return newProjectId;
 }
 const setupNewProjectDirectory = async (req, newProjectId)=> {

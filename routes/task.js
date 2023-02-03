@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const {readFile, writeFile} = require('fs').promises;
 
 const multer  = require('multer');
 const getFile = multer();
@@ -71,13 +70,11 @@ const removeTaskFromList = (taskList, taskToEditId) => {
     return  taskList.filter(task => task.taskId !== parseInt(taskToEditId));
 }
 const removeTaskFromMembers = (projectMembers, taskToEditId) => {
-    const updatedProjectMembers = projectMembers.map(member => {
+    return projectMembers.map(member => {
         const updatedTasks = member.memberTasks.filter(taskId => taskId !== parseInt(taskToEditId));
         return {...member,
             memberTasks: updatedTasks};
     })
-    return updatedProjectMembers;
-
 }
 const addAssigneeToTask = (taskList, taskToEditIndex, memberId) => {
     const updatedTaskList = [...taskList];
@@ -91,8 +88,7 @@ const updateMemberWithNewTask = (projectMembers, membersIndex, taskToEditId) => 
 }
 const removeAssigneeFromTask = (taskList, taskToEditIndex, assigneeToRemove) => {
     const updatedTaskList = [...taskList];
-    updatedTaskAssignees = updatedTaskList[taskToEditIndex].taskAssignees.filter(assignee => assignee !== parseInt(assigneeToRemove));
-    updatedTaskList[taskToEditIndex].taskAssignees = updatedTaskAssignees;
+    updatedTaskList[taskToEditIndex].taskAssignees = updatedTaskList[taskToEditIndex].taskAssignees.filter(assignee => assignee !== parseInt(assigneeToRemove));
     return updatedTaskList;
 };
 const removeTaskFromMember = (projectMembers, taskToEditIndex, assigneeToRemove, membersIndex) => {
@@ -122,7 +118,7 @@ router.post('/', getFile.none(), async (req, res) => {
         const updatedTaskList = pushNewTaskToList(taskList, newTaskId, taskName, taskDescription, taskDueDate);
         const updatedProjectData = updateProjectDataWithNewTaskList(projectData, updatedTaskList);
         await writeProjectData(projectId, updatedProjectData)
-        response = JSON.stringify({
+        const response = JSON.stringify({
             success: true,
             message: "",
             updatedTaskList,
@@ -135,7 +131,7 @@ router.post('/', getFile.none(), async (req, res) => {
         const updatedTaskList = updateTask(taskList, taskToEditIndex, taskName, taskDescription, taskDueDate, taskFinished,taskFinishedDate);
         const updatedProjectData = updateProjectDataWithNewTaskList(projectData, updatedTaskList);
         await writeProjectData(projectId, updatedProjectData)
-        response = JSON.stringify({
+        const response = JSON.stringify({
             success: true,
             message: "",
             updatedTaskList,
@@ -148,7 +144,7 @@ router.post('/', getFile.none(), async (req, res) => {
         const updatedTaskList = setTaskFinished(taskList, taskToEditIndex, taskFinishedDate);
         const updatedProjectData = updateProjectDataWithNewTaskList(projectData, updatedTaskList);
         await writeProjectData(projectId, updatedProjectData)
-        response = JSON.stringify({
+        const response = JSON.stringify({
             success: true,
             message: "",
             updatedTaskList,
@@ -161,7 +157,7 @@ router.post('/', getFile.none(), async (req, res) => {
         const updatedTaskList = setTaskUnfinished(taskList, taskToEditIndex);
         const updatedProjectData = updateProjectDataWithNewTaskList(projectData, updatedTaskList);
         await writeProjectData(projectId, updatedProjectData)
-        response = JSON.stringify({
+        const response = JSON.stringify({
             success: true,
             message: "",
             updatedTaskList: projectData.taskList,
@@ -175,7 +171,7 @@ router.post('/', getFile.none(), async (req, res) => {
         let updatedProjectData = updateProjectDataWithNewTaskList(projectData, updatedTaskList);
         updatedProjectData = updateProjectDataWithNewProjectMembers(updatedProjectData, updatedMembers);
         await writeProjectData(projectId, updatedProjectData);
-        response = JSON.stringify({
+        const response = JSON.stringify({
             success: true,
             message: "",
             updatedTaskList: updatedTaskList,
@@ -192,7 +188,7 @@ router.post('/', getFile.none(), async (req, res) => {
         let updatedProjectData = updateProjectDataWithNewTaskList(projectData, updatedTaskList);
         updatedProjectData = updateProjectDataWithNewProjectMembers(updatedProjectData, updatedMembers);
         await writeProjectData(projectId, updatedProjectData)
-        response = JSON.stringify({
+        const response = JSON.stringify({
             success: true,
             message: "",
             projectTasks: updatedTaskList,
@@ -209,7 +205,7 @@ router.post('/', getFile.none(), async (req, res) => {
         let updatedProjectData = updateProjectDataWithNewTaskList(projectData, updatedTaskList);
         updatedProjectData = updateProjectDataWithNewProjectMembers(updatedProjectData, updatedMembers);
         await writeProjectData(projectId, updatedProjectData)
-        response = JSON.stringify({
+        const response = JSON.stringify({
             success: true,
             message: "",
             projectTasks: projectData.taskList,

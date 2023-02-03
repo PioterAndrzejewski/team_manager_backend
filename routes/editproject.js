@@ -10,23 +10,19 @@ const {readProjectsList, writeProjectsList} = require('../utils/projectsList')
 const {readProjectData, writeProjectData} = require('../utils/projectData')
 
 const removeProjectFromList = (projectsList, projectId) => {
-    const updatedProjectsList = projectsList.filter(project => project.projectId !== parseInt(projectId));
-    return updatedProjectsList;
+    return projectsList.filter(project => project.projectId !== parseInt(projectId));
 }
 const removeProjectDirectory = async (projectId) => {
     const projectPath = safeJoin(dirname(__dirname), `./data/${projectId}/`);
     await rm(projectPath, { recursive: true, force: true });
 }
 const updateProjectsList = (projectsList, projectId, newProjectName) => {
-    projectIndex = projectsList.findIndex(project => project.projectId === projectId);
-    updatedProjectsList = projectsList.map(project => {
+    return projectsList.map(project => {
         if (project.projectId === projectId) {
             project.projectName = newProjectName;
         }
         return project;
-    })
-
-    return updatedProjectsList;
+    });
 }
 const updateProjectData = (projectData, newProjectName) => {
     const updatedProjectData = { ...projectData };
