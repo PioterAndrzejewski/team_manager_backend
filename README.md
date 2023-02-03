@@ -13,7 +13,6 @@
   <p align="center">
     Team Manager - backend
     <br />
-    <a href="https://pioterandrzejewski.github.io/Portfolio-app/">View Demo</a>
   </p>
 </div>
 
